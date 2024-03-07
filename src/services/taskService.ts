@@ -1,3 +1,4 @@
+import { Task } from "@prisma/client";
 import { prisma } from "../database/prisma";
 import { AppError } from "../errors/AppError";
 import { TaskCreate, TaskUpdate } from "../interfaces";
@@ -5,13 +6,13 @@ import { TaskCreatReturn, TaskGetReturn } from "../interfaces/task.interface";
 import { taskGetReturnSchema, taskSchema } from "../schemas/task.schema";
 
 export class TaskService {
-  public async create(payload: TaskCreate): Promise<TaskCreatReturn> {
+  public create = async (payload: TaskCreate): Promise<TaskCreatReturn> => {
     const newTask = await prisma.task.create({ data: payload });
 
     return taskSchema.parse(newTask);
-  }
+  };
 
-  public async read(category?: string): Promise<Array<TaskGetReturn>> {
+  public read = async (category?: string): Promise<Array<TaskGetReturn>> => {
     let name: any = { include: { category: true } };
 
     if (category) {
@@ -25,24 +26,25 @@ export class TaskService {
     }
 
     return taskGetReturnSchema.array().parse(allTasks);
-  }
+  };
 
-  public async retrivie(id: string): Promise<TaskGetReturn> {
-    const findOne = prisma.task.findFirst({ where: { id: Number(id) } });
+  public retrivie = async (foundTask: Task): Promise<TaskGetReturn> => {
+    return taskGetReturnSchema.parse(foundTask);
+  };
 
-    return taskGetReturnSchema.parse(findOne);
-  }
-
-  public async update(id: string, payload: TaskUpdate): Promise<TaskGetReturn> {
+  public update = async (
+    id: string,
+    payload: TaskUpdate
+  ): Promise<TaskGetReturn> => {
     const update = await prisma.task.update({
       where: { id: Number(id) },
       data: payload,
     });
 
     return taskGetReturnSchema.parse(update);
-  }
+  };
 
-  public async delete(id: string) {
+  public delete = async (id: string): Promise<void> => {
     await prisma.task.delete({ where: { id: Number(id) } });
-  }
+  };
 }

@@ -4,32 +4,35 @@ import { TaskService } from "../services/taskService";
 export class TaskController {
   private taskService = new TaskService();
 
-  public async create(req: Request, res: Response): Promise<Response> {
-    const task = await this.taskService.create(req.body);
-    return res.status(201).json(task);
-  }
+  public create = async (req: Request, res: Response): Promise<Response> => {
+    const newTask = await this.taskService.create(req.body);
+    return res.status(201).json(newTask);
+  };
 
-  public async read(req: Request, res: Response): Promise<Response> {
-    const tasks = await this.taskService.read(req.body.categoryName);
-    return res.status(200).json(tasks);
-  }
+  public read = async (
+    { query }: Request,
+    res: Response
+  ): Promise<Response> => {
+    const category = query.category ? String(query.category) : undefined;
+    const allTasks = await this.taskService.read(category);
+    return res.status(200).json(allTasks);
+  };
 
-  public async retrieve(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
-    const task = await this.taskService.retrivie(id);
-    return res.status(200).json(task);
-  }
+  public retrieve = async (req: Request, res: Response): Promise<Response> => {
+    const FoundTask = await this.taskService.retrivie(res.locals.foundTask);
+    return res.status(200).json(FoundTask);
+  };
 
-
-  public async update(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
-    const { body } = req.body;
+  public update = async (
+    { params: { id }, body }: Request,
+    res: Response
+  ): Promise<Response> => {
     const task = await this.taskService.update(id, body);
     return res.status(200).json(task);
-  }
+  };
 
-  public async delete(req: Request, res: Response): Promise<Response> {
+  public delete = async (req: Request, res: Response): Promise<Response> => {
     await this.taskService.delete(req.params.id);
     return res.status(204).json();
-  }
+  };
 }

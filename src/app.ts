@@ -12,7 +12,8 @@ app.use(json());
 
 app.use(helmet());
 
-app.use(handleErrors);
-
 app.use("/tasks", taskRouter);
+
 app.use("/categories", categoryRouter);
+
+app.use(handleErrors);
