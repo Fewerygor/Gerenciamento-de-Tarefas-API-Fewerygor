@@ -4,8 +4,14 @@ import { TaskService } from "../services/taskService";
 export class TaskController {
   private taskService = new TaskService();
 
-  public create = async (req: Request, res: Response): Promise<Response> => {
-    const newTask = await this.taskService.create(req.body);
+  public create = async (
+    { body }: Request,
+    res: Response
+  ): Promise<Response> => {
+    const newTask = await this.taskService.create(
+      body,
+      Number(res.locals.sub!)
+    );
     return res.status(201).json(newTask);
   };
 
@@ -14,7 +20,10 @@ export class TaskController {
     res: Response
   ): Promise<Response> => {
     const category = query.category ? String(query.category) : undefined;
-    const allTasks = await this.taskService.read(category);
+    const allTasks = await this.taskService.read(
+      Number(res.locals.sub!),
+      category
+    );
     return res.status(200).json(allTasks);
   };
 

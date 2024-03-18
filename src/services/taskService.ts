@@ -6,18 +6,24 @@ import { TaskCreatReturn, TaskGetReturn } from "../interfaces/task.interface";
 import { taskGetReturnSchema, taskSchema } from "../schemas/task.schema";
 
 export class TaskService {
-  public create = async (payload: TaskCreate): Promise<TaskCreatReturn> => {
-    const newTask = await prisma.task.create({ data: payload });
+  public create = async (
+    payload: TaskCreate,
+    userId: number
+  ): Promise<TaskCreatReturn> => {
+    const newTask = await prisma.task.create({ data: { ...payload, userId } });
 
     return taskSchema.parse(newTask);
   };
 
-  public read = async (category?: string): Promise<Array<TaskGetReturn>> => {
-    let name: any = { include: { category: true } };
+  public read = async (
+    userId: number,
+    category?: string,
+  ): Promise<Array<TaskGetReturn>> => {
+    let name: any = { include: { category: true }, where: { userId } };
 
     if (category) {
       const categoryName = { name: { equals: category, mode: "insensitive" } };
-      name = { ...name, where: { category: categoryName } };
+      name = { ...name, where: { ...name.where, category: categoryName } };
     }
     const allTasks = await prisma.task.findMany(name);
 

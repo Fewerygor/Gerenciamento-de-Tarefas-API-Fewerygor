@@ -5,7 +5,12 @@ import {
   TaskCreatReturn,
   TaskGetReturn,
 } from "./task.interface";
-import { DynamicParamsIdFinder, PrismaClientGeneric } from "./utils.interfaces";
+import {
+  UserCreate,
+  UserReturn,
+  UserLogin,
+  UserLoginReturn,
+} from "./user.interface";
 
 export {
   CategoryCreate,
@@ -13,6 +18,8 @@ export {
   TaskUpdate,
   TaskCreatReturn,
   TaskGetReturn,
-  DynamicParamsIdFinder,
-  PrismaClientGeneric,
+  UserCreate,
+  UserReturn,
+  UserLogin,
+  UserLoginReturn,
 };

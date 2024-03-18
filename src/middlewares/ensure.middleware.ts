@@ -32,24 +32,7 @@ export class EnsureMiddleware {
 
     return next();
   };
-
-  public categoryParams = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
-    const { id } = req.params;
-    const foundCategory = await prisma.category.findFirst({
-      where: { id: Number(id) },
-    });
-
-    if (!foundCategory) {
-      throw new AppError("Category not found", 404);
-    }
-
-    return next();
-  };
-
+  
   public validCategory = async (
     req: Request,
     res: Response,
@@ -65,6 +48,43 @@ export class EnsureMiddleware {
 
     if (!foundCategory) {
       throw new AppError("Category not found", 404);
+    }
+
+    return next();
+  };
+
+  public categoryParams = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    const { id } = req.params;
+    const foundCategory = await prisma.category.findFirst({
+      where: { id: Number(id) },
+    });
+
+    if (!foundCategory) {
+      throw new AppError("Category not found", 404);
+    }
+
+    res.locals = { ...res.locals, foundCategory };
+
+    return next();
+  };
+
+  public emailIsUnique = async (
+    req: Request,
+    _res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    const { email } = req.body;
+
+    if (!email) return next();
+
+    const foundUser = await prisma.user.findFirst({ where: { email } });
+
+    if (foundUser) {
+      throw new AppError("This email is already registered", 409);
     }
 
     return next();

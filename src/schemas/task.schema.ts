@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { baseSchema } from "./base.schema";
-import { categoryCreateSchema, categorySchema } from "./category.schema";
+import { categorySchema } from "./category.schema";
 
 export const taskSchema = baseSchema.extend({
-  title: z.string(),
-  content: z.string(),
+  title: z.string().min(1),
+  content: z.string().min(1),
   finished: z.boolean().default(false),
   categoryId: z.number().positive().nullish(),
 });
