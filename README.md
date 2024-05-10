@@ -1,6 +1,6 @@
 # Gerenciamento de Tarefas API
 
-Está documentação servirá de base para entrega, todas as rotas deverão se comportar assim como está previsto na documentação abaixo:
+Todas as rotas deverão se comportar assim como está previsto na documentação abaixo:
 
 ### Criação de tarefa POST /tasks
 
